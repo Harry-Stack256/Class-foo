@@ -1,10 +1,10 @@
 import express from 'express';
 import { createServer as createViteServer } from 'vite';
 import mongoose from 'mongoose';
-import OpenAI from 'openai';
 import path from 'path';
 import dotenv from 'dotenv';
 import { fileURLToPath } from 'url';
+import { analyzeEvent } from './src/services/eventAnalysisService';
 
 dotenv.config();
 
@@ -247,7 +247,7 @@ app.put('/api/users/:id', requireDB, async (req, res) => {
 
 app.post('/api/seed', requireDB, async (req, res) => {
   try {
-    const { userId } = req.body;
+    const { userId, includeRandomUsers } = req.body;
     if (!userId) return res.status(400).json({ error: 'userId is required' });
 
     const currentUser = await User.findById(userId);
@@ -274,6 +274,32 @@ app.post('/api/seed', requireDB, async (req, res) => {
       { name: 'Hannah Abbott', age: 24, tags: ['Baking', 'Gardening', 'Introvert'] }
     ];
     const createdStrangers = await User.insertMany(strangersData);
+
+    let createdRandomUsers: any[] = [];
+    let allUsers = [...createdFriends, ...createdStrangers];
+
+    if (includeRandomUsers) {
+      // Create more example users with diverse tags
+      const generateRandomTags = () => {
+        const allTags = ['Vegetarian', 'Gluten-Free', 'Halal', 'Vegan', 'Keto', 'Nut Allergy', 'Dairy-Free', 'Sober', 'No Alcohol', 'Spicy Food', 'Low Carb', 'Pescatarian', 'Diabetic', 'Lactose Intolerant', 'Soy-Free'];
+        const numTags = Math.floor(Math.random() * 4) + 2;
+        const tags = [];
+        while (tags.length < numTags) {
+          const tag = allTags[Math.floor(Math.random() * allTags.length)];
+          if (!tags.includes(tag)) tags.push(tag);
+        }
+        return tags;
+      };
+
+      const randomUsersData = Array.from({ length: 20 }, (_, i) => ({
+        name: `Random Guest ${i + 1}`,
+        age: Math.floor(Math.random() * 40) + 20,
+        tags: generateRandomTags()
+      }));
+
+      createdRandomUsers = await User.insertMany(randomUsersData);
+      allUsers = [...allUsers, ...createdRandomUsers];
+    }
 
     // Add friends to current user
     const currentFriendIds = currentUser.friends.map(id => id.toString());
@@ -304,6 +330,15 @@ app.post('/api/seed', requireDB, async (req, res) => {
     nextWeek.setDate(nextWeek.getDate() + 7);
     nextWeek.setHours(18, 0, 0, 0);
 
+    // Helper to get random attendees
+    const getRandomAttendees = (count: number) => {
+      const shuffled = [...allUsers].sort(() => 0.5 - Math.random());
+      return shuffled.slice(0, count).map(u => ({
+        userId: u._id,
+        status: Math.random() > 0.2 ? 'yes' : 'maybe'
+      }));
+    };
+
     const event1 = new Event({
       title: 'Backyard Pizza Night',
       description: 'Firing up the Ooni! I\'ll have classic margherita and some veggie options. Feel free to bring your own toppings if you have specific dietary needs. We have gluten-free dough available too!',
@@ -313,11 +348,7 @@ app.post('/api/seed', requireDB, async (req, res) => {
       isPublic: true,
       tags: ['Pizza', 'Casual', 'Family Friendly', 'Gluten-Free Options'],
       hostId: createdFriends[5]._id, // Frank
-      attendees: [
-        { userId: createdFriends[5]._id, status: 'yes' },
-        { userId: createdFriends[0]._id, status: 'yes' },
-        { userId: currentUser._id, status: 'invited' }
-      ]
+      attendees: getRandomAttendees(10)
     });
 
     const event2Date = new Date();
@@ -333,10 +364,7 @@ app.post('/api/seed', requireDB, async (req, res) => {
       isPublic: true,
       tags: ['Tacos', 'Street Food', 'Vegetarian Options'],
       hostId: createdFriends[1]._id, // Bob
-      attendees: [
-        { userId: createdFriends[1]._id, status: 'yes' },
-        { userId: createdStrangers[2]._id, status: 'yes' }
-      ]
+      attendees: getRandomAttendees(10)
     });
 
     const event3Date = new Date();
@@ -352,11 +380,7 @@ app.post('/api/seed', requireDB, async (req, res) => {
       isPublic: true,
       tags: ['Potluck', 'Outdoors', 'Community', 'Allergy Aware'],
       hostId: createdFriends[4]._id, // Elena
-      attendees: [
-        { userId: createdFriends[4]._id, status: 'yes' },
-        { userId: createdFriends[2]._id, status: 'yes' },
-        { userId: createdStrangers[3]._id, status: 'yes' }
-      ]
+      attendees: getRandomAttendees(10)
     });
 
     const event4Date = new Date();
@@ -372,15 +396,12 @@ app.post('/api/seed', requireDB, async (req, res) => {
       isPublic: true,
       tags: ['BBQ', 'Park', 'Casual', 'Vegan Options'],
       hostId: createdStrangers[2]._id, // George
-      attendees: [
-        { userId: createdStrangers[2]._id, status: 'yes' },
-        { userId: createdFriends[3]._id, status: 'maybe' }
-      ]
+      attendees: getRandomAttendees(10)
     });
 
     await Event.insertMany([event1, event2, event3, event4]);
 
-    res.json({ message: 'Seeded successfully', friends: createdFriends, strangers: createdStrangers, events: [event1, event2, event3, event4] });
+    res.json({ message: 'Seeded successfully', friends: createdFriends, strangers: createdStrangers, randomUsers: createdRandomUsers, events: [event1, event2, event3, event4] });
   } catch (err: any) {
     res.status(500).json({ error: err.message });
   }
@@ -559,6 +580,46 @@ app.post('/api/events/:id/invite', requireDB, async (req, res) => {
   }
 });
 
+app.post('/api/events/:id/seed', requireDB, async (req, res) => {
+  try {
+    const event = await Event.findById(req.params.id);
+    if (!event) return res.status(404).json({ error: 'Event not found' });
+
+    // Generate random users
+    const generateRandomTags = () => {
+      const allTags = ['Vegetarian', 'Gluten-Free', 'Halal', 'Vegan', 'Keto', 'Nut Allergy', 'Dairy-Free', 'Sober', 'No Alcohol', 'Spicy Food', 'Low Carb', 'Pescatarian', 'Diabetic', 'Lactose Intolerant', 'Soy-Free'];
+      const numTags = Math.floor(Math.random() * 4) + 2;
+      const tags = [];
+      while (tags.length < numTags) {
+        const tag = allTags[Math.floor(Math.random() * allTags.length)];
+        if (!tags.includes(tag)) tags.push(tag);
+      }
+      return tags;
+    };
+
+    const randomUsersData = Array.from({ length: 5 }, (_, i) => ({
+      name: `Random Guest ${Math.floor(Math.random() * 1000)}`,
+      age: Math.floor(Math.random() * 40) + 20,
+      tags: generateRandomTags()
+    }));
+
+    const createdRandomUsers = await User.insertMany(randomUsersData);
+
+    // Add to event
+    for (const user of createdRandomUsers) {
+      event.attendees.push({ userId: user._id, status: 'yes' });
+    }
+
+    await event.save();
+    const updatedEvent = await Event.findById(req.params.id)
+      .populate('hostId', 'name tags')
+      .populate('attendees.userId', 'name tags');
+    res.json(updatedEvent);
+  } catch (err: any) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 app.post('/api/events/:id/analyze', requireDB, async (req, res) => {
   try {
     const event = await Event.findById(req.params.id)
@@ -567,81 +628,11 @@ app.post('/api/events/:id/analyze', requireDB, async (req, res) => {
       
     if (!event) return res.status(404).json({ error: 'Event not found' });
     
-    if (!process.env.FEATHERLESS_API_KEY) {
-      return res.status(500).json({ error: 'FEATHERLESS_API_KEY is not configured.' });
-    }
-
-    const openai = new OpenAI({
-      baseURL: "https://api.featherless.ai/v1",
-      apiKey: process.env.FEATHERLESS_API_KEY
-    });
-
-    const attendees = event.attendees
-      .filter(a => a.status === 'yes')
-      .map(a => a.userId);
-      
-    const prompt = `
-    Event: ${event.title}
-    Description: ${event.description}
-    Date: ${event.date}
-    Location: ${event.location || 'Not specified'}
-    
-    Attendees and their preferences/requirements:
-    ${attendees.map((u: any) => `- ${u.name}: ${u.tags.join(', ')}`).join('\n')}
-    
-    Please analyze the event description against the attendees' preferences and requirements.
-    Return ONLY a valid JSON object with the following structure (do not include markdown code blocks):
-    {
-      "attendee_profiles": [
-        {
-          "guest": "Name",
-          "tags": ["tag1", "tag2"]
-        }
-      ],
-      "audit_summary": {
-        "critical_count": number,
-        "dietary_count": number,
-        "beverage_count": number
-      },
-      "report": {
-        "critical_safety_gaps": [
-          { "guest": "Name", "constraint": "...", "conflicting_items": ["..."], "reason": "..." }
-        ],
-        "dietary_conflicts": [
-          { "guest": "Name", "constraint": "...", "conflicting_items": ["..."], "reason": "..." }
-        ],
-        "beverage_logistics": {
-          "neutral_observations": [
-            { "guest": "Name", "note": "..." }
-          ]
-        }
-      },
-      "recommendations": "A short, creative recommendation for accommodations, activities, or catering that works for everyone."
-    }
-    `;
-
-    const response = await openai.chat.completions.create({
-      model: "meta-llama/Llama-3-8B-Instruct", // A good default model on Featherless
-      messages: [{ role: "user", content: prompt }],
-    });
-
-    let jsonStr = response.choices[0].message.content || '{}';
-    jsonStr = jsonStr.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
-    
-    let analysisData;
-    try {
-      analysisData = JSON.parse(jsonStr);
-    } catch (e) {
-      console.error("Failed to parse JSON from LLM:", jsonStr);
-      analysisData = {
-        audit_summary: { critical_count: 0, dietary_count: 0, beverage_count: 0 },
-        report: {},
-        recommendations: "Failed to parse AI response. Raw output: " + jsonStr
-      };
-    }
+    const analysisData = await analyzeEvent(event);
 
     res.json({ analysis: analysisData });
   } catch (err: any) {
+    console.error("Analysis error:", err);
     res.status(500).json({ error: err.message });
   }
 });
