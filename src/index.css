@@ -1,0 +1,96 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Montserrat", sans-serif;
+  --font-display: "Montserrat", sans-serif;
+
+  /* Brand Background Color (#d1495b) */
+  --color-brand-red: #d1495b;
+
+  /* Box Colors */
+  --color-box-bg: #003366;
+  --color-box-border: #000000;
+
+  /* Indigo is now Dark Blue (#003366) - keeping for some contrast if needed */
+  --color-indigo-50: #f0f7ff;
+  --color-indigo-100: #e0effe;
+  --color-indigo-200: #bae0fd;
+  --color-indigo-300: #7cc8fb;
+  --color-indigo-400: #38aef7;
+  --color-indigo-500: #003366;
+  --color-indigo-600: #002b57;
+  --color-indigo-700: #002347;
+  --color-indigo-800: #001b38;
+  --color-indigo-900: #001328;
+  --color-indigo-950: #000a1a;
+
+  /* Purple was Pink, now White */
+  --color-purple-50: #ffffff;
+  --color-purple-100: #ffffff;
+  --color-purple-200: #f8f8f8;
+  --color-purple-300: #f0f0f0;
+  --color-purple-400: #e8e8e8;
+  --color-purple-500: #e0e0e0;
+  --color-purple-600: #d8d8d8;
+  --color-purple-700: #d0d0d0;
+  --color-purple-800: #c8c8c8;
+  --color-purple-900: #c0c0c0;
+  --color-purple-950: #b8b8b8;
+
+  /* Emerald is now White/Soft Background (#ffffff) */
+  --color-emerald-50: #ffffff;
+  --color-emerald-100: #fafafa;
+  --color-emerald-200: #f5f5f5;
+  --color-emerald-300: #e5e5e5;
+  --color-emerald-400: #d4d4d4;
+  --color-emerald-500: #a3a3a3;
+  --color-emerald-600: #737373;
+  --color-emerald-700: #525252;
+  --color-emerald-800: #404040;
+  --color-emerald-900: #262626;
+  --color-emerald-950: #171717;
+}
+
+body {
+  @apply bg-brand-red text-white;
+  font-family: "Montserrat", sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  @apply font-display;
+}
+
+/* Ensure links and other elements are visible on dark background */
+a {
+  @apply transition-colors;
+}
+
+/* Specific overrides for elements directly on the brand background */
+.bg-brand-red h1, .bg-brand-red h2, .bg-brand-red h3, .bg-brand-red p, .bg-brand-red span {
+  @apply text-white;
+}
+
+/* Input focus styles */
+input:focus, textarea:focus, select:focus {
+  @apply ring-white/30 border-white/50;
+}
+
+/* Custom scrollbar for better visibility on dark background */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-brand-red;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-white/20 rounded-full hover:bg-white/30 transition-colors;
+}
+
+@layer components {
+  .box {
+    @apply bg-box-bg border border-box-border rounded-3xl shadow-lg text-white;
+  }
+}

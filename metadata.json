@@ -1,0 +1,5 @@
+{
+  "name": "FeastMeet",
+  "description": "An event sharing website focused on coordinating preferences and bringing people together, powered by Featherless API.",
+  "requestFramePermissions": ["geolocation"]
+}
