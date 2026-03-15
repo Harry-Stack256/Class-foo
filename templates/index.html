@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <script>
+        const CURRENT_USER_ID = "{{ user.id }}";
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JustRight · Fit‑Circle</title>
+    <!-- Google Fonts: Quicksand -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
+    <!-- Font Awesome (free icons) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Quicksand', sans-serif;
+        }
+
+        body {
+            background-color: #ffffff;
+            /* pure white */
+            color: #1e1e1e;
+            padding: 0 2rem 2rem;
+        }
+
+        .app {
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+
+        /* top navigation */
+        .nav {
+            display: flex;
+            gap: 2.5rem;
+            padding: 1.5rem 0 1rem;
+            border-bottom: 1px solid #eaeaea;
+            margin-bottom: 2rem;
+        }
+
+        .nav a {
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.2rem;
+            color: #666;
+            padding-bottom: 0.5rem;
+            transition: color 0.2s;
+            cursor: pointer;
+        }
+
+        .nav a.active {
+            color: #f45b2b;
+            /* orange */
+            border-bottom: 3px solid #f45b2b;
+        }
+
+        /* panels */
+        .panel {
+            display: none;
+        }
+
+        .panel.active {
+            display: block;
+        }
+
+        /* headings */
+        h2 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: #004BA8;
+            /* cobalt */
+        }
+
+        h3 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin: 2rem 0 1rem;
+            color: #008080;
+            /* teal */
+        }
+
+        /* search bar */
+        .search-bar {
+            margin-bottom: 2.5rem;
+        }
+
+        .search-bar input {
+            width: 100%;
+            max-width: 600px;
+            padding: 1rem 1.5rem;
+            font-size: 1.1rem;
+            border: 1px solid #ddd;
+            border-radius: 60px;
+            outline: none;
+            background: #fafafa;
+            transition: border 0.2s;
+        }
+
+        .search-bar input:focus {
+            border-color: #f45b2b;
+        }
+
+        /* product grid */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+            transition: transform 0.2s, box-shadow 0.2s;
+            border: 1px solid #f0f0f0;
+        }
+
+        .product-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0, 75, 168, 0.05);
+        }
+
+        .product-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .product-info {
+            padding: 1.2rem;
+        }
+
+        .product-brand {
+            font-size: 0.9rem;
+            color: #008080;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .product-name {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin: 0.3rem 0 0.5rem;
+        }
+
+        .product-desc {
+            color: #555;
+            font-size: 0.9rem;
+            margin-bottom: 0.75rem;
+            line-height: 1.4;
+        }
+
+        .product-price {
+            font-weight: 700;
+            color: #004BA8;
+        }
+
+        /* network layout */
+        .network-layout {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .contact-list {
+            flex: 1;
+            max-width: 320px;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            border-radius: 16px;
+            background: white;
+            border: 1px solid #f0f0f0;
+            margin-bottom: 0.75rem;
+            cursor: pointer;
+            transition: background 0.2s, border-color 0.2s;
+        }
+
+        .contact-item:hover {
+            background: #fff8f5;
+            border-color: #f45b2b40;
+        }
+
+        .contact-item img {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .contact-item h4 {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .contact-tags {
+            color: #008080;
+            font-size: 0.8rem;
+        }
+
+        .friend-detail {
+            flex: 2;
+            background: white;
+            border-radius: 30px;
+            padding: 2rem;
+            border: 1px solid #eaeaea;
+        }
+
+        .friend-detail h4 {
+            margin: 1.5rem 0 0.5rem;
+            color: #004BA8;
+        }
+
+        .friend-detail p {
+            margin-bottom: 0.5rem;
+        }
+
+        .size-badge {
+            display: inline-block;
+            background: #f45b2b10;
+            border: 1px solid #f45b2b30;
+            border-radius: 40px;
+            padding: 0.3rem 1rem;
+            font-weight: 600;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+            color: #f45b2b;
+        }
+
+        /* profile sizes */
+        .sizes-row {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+            margin: 1.5rem 0;
+        }
+
+        .size-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: #fafafa;
+            padding: 0.75rem 1.5rem;
+            border-radius: 60px;
+            border: 1px solid #eee;
+        }
+
+        .size-item i {
+            color: #004BA8;
+            font-size: 1.2rem;
+        }
+
+        .size-item span {
+            font-weight: 600;
+        }
+
+        .edit-icon {
+            color: #f45b2b;
+            cursor: pointer;
+            margin-left: 0.5rem;
+        }
+
+        /* feedback list */
+        .feedback-list {
+            margin: 1.5rem 0;
+        }
+
+        .feedback-row {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            background: white;
+            padding: 1rem 1.5rem;
+            border-radius: 30px;
+            border: 1px solid #f0f0f0;
+            margin-bottom: 1rem;
+        }
+
+        .feedback-row img {
+            width: 70px;
+            height: 70px;
+            border-radius: 16px;
+            object-fit: cover;
+        }
+
+        .feedback-info {
+            flex: 2;
+        }
+
+        .feedback-info strong {
+            font-size: 1.1rem;
+        }
+
+        .feedback-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .feedback-actions button {
+            background: none;
+            border: 1px solid #ccc;
+            padding: 0.4rem 1.2rem;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .feedback-actions .fits {
+            background: #00808010;
+            border-color: #008080;
+            color: #008080;
+        }
+
+        .feedback-actions .runs {
+            background: #f45b2b10;
+            border-color: #f45b2b;
+            color: #f45b2b;
+        }
+
+        /* notifications */
+        .notif-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 20px;
+            border-left: 6px solid #f45b2b;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+            margin-bottom: 1.5rem;
+        }
+
+        .notif-actions {
+            margin-top: 1rem;
+        }
+
+        .notif-actions button {
+            background: #f45b2b;
+            color: white;
+            border: none;
+            padding: 0.5rem 1.5rem;
+            border-radius: 40px;
+            font-weight: 600;
+            margin-right: 1rem;
+            cursor: pointer;
+        }
+
+        .notif-actions button.secondary {
+            background: #004BA8;
+        }
+
+        /* recent searches tags */
+        .recent-tags {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+
+        .tag {
+            background: #f0f0f0;
+            padding: 0.5rem 1.2rem;
+            border-radius: 40px;
+            font-size: 0.9rem;
+            color: #333;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app">
+        <!-- Top navigation -->
+        <div class="nav">
+            <a class="active" data-panel="dashboard">Dashboard</a>
+            <a data-panel="network">Network</a>
+            <a data-panel="profile">Profile</a>
+            <a data-panel="notifications">Notifications</a>
+        </div>
+
+        <!-- Dashboard Panel -->
+        <div id="dashboard" class="panel active">
+            <div class="search-bar">
+                <input type="text" placeholder="What are we looking for today? (e.g. leather boots)">
+            </div>
+
+            <h2>Your AI-powered fit finder</h2>
+            <div class="product-grid" id="dashboard-grid">
+                {% for product in products %}
+                <div class="product-card">
+                    <img src="{{ product.img }}" alt="{{ product.name }}">
+                    <div class="product-info">
+                        <div class="product-brand">{{ product.brand }}</div>
+                        <div class="product-name">{{ product.name }}</div>
+                        <div class="product-desc">{{ product.desc }}</div>
+                        <div class="product-price">{{ product.price }}</div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <h3>Recent searches</h3>
+            <div class="recent-tags">
+                <span class="tag">leather boots</span>
+                <span class="tag">oversized hoodie</span>
+                <span class="tag">linen pants</span>
+                <span class="tag">running shoes</span>
+            </div>
+        </div>
+
+        <!-- Network Panel -->
+        <div class="contact-list" id="contact-list">
+            {% for friend in friends %}
+            <div class="contact-item" data-id="{{ friend._id }}">
+                <img src="{{ friend.profile_pic }}" alt="{{ friend.first_name }}">
+                <div>
+                    <h4>{{ friend.first_name }} {{ friend.last_name }}</h4>
+                    <div class="contact-tags">{{ friend.brand_affinity | join(' · ') }}</div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Profile Panel -->
+        <div id="profile" class="panel">
+            <h2>My Fit‑Profile</h2>
+            <div style="background: #fafafa; border-radius: 30px; padding: 2rem; margin-bottom: 2rem;">
+                <h3 style="margin-top: 0;">My Sizes</h3>
+                <div class="sizes-row">
+                    <div class="size-item">
+                        <i class="fas fa-tshirt"></i>
+                        <span id="tshirt-size">{{ user.sizes.tshirt }}</span>
+                        <i class="fas fa-pencil-alt edit-icon" id="edit-tshirt"></i>
+                    </div>
+                    <div class="size-item">
+                        <i class="fas fa-socks"></i> <!-- using socks for pants -->
+                        <span id="pants-size">{{ user.sizes.tshirt }}</span>
+                        <i class="fas fa-pencil-alt edit-icon" id="edit-pants"></i>
+                    </div>
+                    <div class="size-item">
+                        <i class="fas fa-shoe-prints"></i>
+                        <span id="shoes-size">{{ user.sizes.tshirt }}</span>
+                        <i class="fas fa-pencil-alt edit-icon" id="edit-shoes"></i>
+                    </div>
+                </div>
+            </div>
+
+            <h3>My Fit‑Feedback</h3>
+            <div class="feedback-list" id="profile-feedback">
+    {% for purchase in purchases %}
+    <div class="feedback-row">
+        <img src="{{ purchase.img }}" alt="">
+        <div class="feedback-info">
+            <strong>{{ purchase.brand }} {{ purchase.name }}</strong><br>
+            <span style="color:#008080;">Size {{ purchase.size }}</span>
+        </div>
+        <div class="feedback-actions">
+            <button class="fits {% if purchase.fit_feedback == 'Fits Me' %}active{% endif %}" data-id="{{ purchase._id }}" data-feedback="Fits Me">Fits Me</button>
+            <button class="runs {% if purchase.fit_feedback == 'Runs Small/Large' %}active{% endif %}" data-id="{{ purchase._id }}" data-feedback="Runs Small/Large">Runs Small</button>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+        </div>
+
+        <!-- Notifications Panel -->
+        <div id="notifications-list">
+    {% for notif in notifications %}
+    <div class="notif-card">
+        <p>{{ notif.text }}</p>
+        {% if notif.actions %}
+        <div class="notif-actions">
+            <button onclick="acceptMatch('{{ notif.id }}')">Accept</button>
+            <button class="secondary" onclick="ignoreMatch('{{ notif.id }}')">Ignore</button>
+        </div>
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>
+        </div>
+    </div>
+
+    <script>
+        
+        // ---------- RENDER FUNCTIONS ----------
+        function renderDashboard() {
+            const grid = document.getElementById('dashboard-grid');
+            grid.innerHTML = dashboardProducts.map(p => `
+            <div class="product-card">
+                <img src="${p.img}" alt="${p.name}">
+                <div class="product-info">
+                    <div class="product-brand">${p.brand}</div>
+                    <div class="product-name">${p.name}</div>
+                    <div class="product-desc">${p.desc}</div>
+                    <div class="product-price">${p.price}</div>
+                </div>
+            </div>
+        `).join('');
+        }
+
+        function renderContacts() {
+            const list = document.getElementById('contact-list');
+            list.innerHTML = friends.map(f => `
+            <div class="contact-item" data-id="${f.id}">
+                <img src="${f.img}" alt="${f.name}">
+                <div>
+                    <h4>${f.name}</h4>
+                    <div class="contact-tags">${f.tags.join(' · ')}</div>
+                </div>
+            </div>
+        `).join('');
+
+            document.querySelectorAll('.contact-item').forEach(el => {
+                el.addEventListener('click', () => {
+                    const id = parseInt(el.dataset.id);
+                    const friend = friends.find(f => f.id === id);
+                    showFriendDetail(friend);
+                });
+            });
+        }
+
+        function showFriendDetail(friendId) {
+    fetch(`/api/friend/${friendId}`)
+        .then(response => response.json())
+        .then(data => {
+            // populate the detail panel using data
+            const detailDiv = document.getElementById('friend-detail');
+            detailDiv.style.display = 'block';
+            detailDiv.innerHTML = `...`; // use data to build HTML
+        });
+}
+
+        function renderProfileFeedback() {
+            const list = document.getElementById('profile-feedback');
+            list.innerHTML = profileFeedback.map(item => `
+            <div class="feedback-row">
+                <img src="${item.img}" alt="">
+                <div class="feedback-info">
+                    <strong>${item.brand} ${item.name}</strong><br>
+                    <span style="color:#008080;">Size ${item.size}</span>
+                </div>
+                <div class="feedback-actions">
+                    <button class="fits" onclick="alert('Marked as Fits Me (demo)')">Fits Me</button>
+                    <button class="runs" onclick="alert('Marked as Runs Small/Large (demo)')">Runs Small</button>
+                </div>
+            </div>
+        `).join('');
+        }
+
+        function renderNotifications() {
+            const list = document.getElementById('notifications-list');
+            list.innerHTML = notifications.map(n => `
+            <div class="notif-card">
+                <p>${n.text}</p>
+                ${n.actions ? `
+                    <div class="notif-actions">
+                        <button onclick="alert('Match accepted (demo)')">Accept</button>
+                        <button class="secondary" onclick="alert('Ignored (demo)')">Ignore</button>
+                    </div>
+                ` : ''}
+            </div>
+        `).join('');
+        }
+
+        // edit size icons
+        document.getElementById('edit-tshirt').addEventListener('click', () => {
+            let newSize = prompt('Enter new T‑Shirt size', document.getElementById('tshirt-size').innerText);
+            if (newSize) document.getElementById('tshirt-size').innerText = newSize;
+        });
+        document.getElementById('edit-pants').addEventListener('click', () => {
+            let newSize = prompt('Enter new Pants size (e.g., 32x32)', document.getElementById('pants-size').innerText);
+            if (newSize) document.getElementById('pants-size').innerText = newSize;
+        });
+        document.getElementById('edit-shoes').addEventListener('click', () => {
+            let newSize = prompt('Enter new Shoe size', document.getElementById('shoes-size').innerText);
+            if (newSize) document.getElementById('shoes-size').innerText = newSize;
+        });
+
+        // navigation
+        document.querySelectorAll('.nav a').forEach(link => {
+            link.addEventListener('click', () => {
+                document.querySelectorAll('.nav a').forEach(l => l.classList.remove('active'));
+                link.classList.add('active');
+                const target = link.dataset.panel;
+                document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+                document.getElementById(target).classList.add('active');
+            });
+        });
+
+        // initial renders
+        renderDashboard();
+        renderContacts();
+        renderProfileFeedback();
+        renderNotifications();
+    </script>
+</body>
+
+</html>
