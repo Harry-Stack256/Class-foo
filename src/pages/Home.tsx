@@ -38,7 +38,7 @@ export default function Home() {
       const res = await fetch('/api/seed', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId: user._id })
+        body: JSON.stringify({ userId: user._id, includeRandomUsers: true })
       });
       if (res.ok) {
         setToast({ message: 'Example data generated successfully!', type: 'success' });

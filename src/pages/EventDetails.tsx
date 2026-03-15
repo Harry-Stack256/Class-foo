@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { format } from 'date-fns';
 import { useAuthStore } from '../store';
@@ -50,22 +50,7 @@ export default function EventDetails() {
     fetchEvent();
   }, [id]);
 
-  const handleRSVP = async (status: 'yes' | 'maybe' | 'no') => {
-    try {
-      const res = await fetch(`/api/events/${id}/rsvp`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId: user?._id, status }),
-      });
-      if (res.ok) {
-        fetchEvent(); // Refresh event data
-      }
-    } catch (error) {
-      console.error('Failed to RSVP', error);
-    }
-  };
-
-  const handleAnalyze = async () => {
+  const handleAnalyze = useCallback(async () => {
     setIsAnalyzing(true);
     try {
       const res = await fetch(`/api/events/${id}/analyze`, {
@@ -83,6 +68,27 @@ export default function EventDetails() {
     } finally {
       setIsAnalyzing(false);
     }
+  }, [id]);
+
+  useEffect(() => {
+    if (event && event.hostId?._id === user?._id) {
+      handleAnalyze();
+    }
+  }, [event?.attendees, event?.tags, event?.hostId?._id, user?._id, handleAnalyze]);
+
+  const handleRSVP = async (status: 'yes' | 'maybe' | 'no') => {
+    try {
+      const res = await fetch(`/api/events/${id}/rsvp`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: user?._id, status }),
+      });
+      if (res.ok) {
+        fetchEvent(); // Refresh event data
+      }
+    } catch (error) {
+      console.error('Failed to RSVP', error);
+    }
   };
 
   if (isLoading) {
@@ -97,6 +103,13 @@ export default function EventDetails() {
 
   const userRSVP = event.attendees?.find((a: any) => a.userId?._id === user?._id)?.status;
   const isHost = event.hostId?._id === user?._id;
+  console.log('Debug isHost:', { 
+    isHost, 
+    hostId: event.hostId, 
+    hostId_id: event.hostId?._id, 
+    userId: user?._id,
+    user: user
+  });
 
   // Categorize and count tags from all 'yes' attendees
   const dietaryMedicalKeywords = [
@@ -284,6 +297,27 @@ export default function EventDetails() {
             )}
             
             <div className="pt-4 flex flex-wrap gap-3">
+              {isHost && (
+                <button
+                  onClick={async () => {
+                    try {
+                      const res = await fetch(`/api/events/${id}/seed`, { method: 'POST' });
+                      if (res.ok) {
+                        fetchEvent();
+                      } else {
+                        alert('Failed to seed data.');
+                      }
+                    } catch (error) {
+                      console.error('Failed to seed data', error);
+                      alert('Failed to seed data.');
+                    }
+                  }}
+                  className="inline-flex items-center px-4 py-2 border border-stone-200 shadow-sm text-sm font-medium rounded-xl text-stone-700 bg-white hover:bg-stone-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors"
+                >
+                  <Sparkles className="w-4 h-4 mr-2 text-indigo-500" />
+                  Seed Example Data
+                </button>
+              )}
               <button
                 onClick={() => setIsInviteModalOpen(true)}
                 className="inline-flex items-center px-4 py-2 border border-stone-200 shadow-sm text-sm font-medium rounded-xl text-stone-700 bg-white hover:bg-stone-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors"
@@ -368,15 +402,13 @@ export default function EventDetails() {
                     <Sparkles className="w-6 h-6 mr-2 text-white" />
                     AI Host Summary
                   </h2>
-                  {!analysis && (
-                    <button
-                      onClick={handleAnalyze}
-                      disabled={isAnalyzing}
-                      className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-xl shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors disabled:opacity-50"
-                    >
-                      {isAnalyzing ? 'Analyzing...' : 'Generate Summary'}
-                    </button>
-                  )}
+                  <button
+                    onClick={handleAnalyze}
+                    disabled={isAnalyzing}
+                    className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-xl shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors disabled:opacity-50"
+                  >
+                    {isAnalyzing ? 'Analyzing...' : 'Generate Summary'}
+                  </button>
                 </div>
                 
                 {analysis ? (

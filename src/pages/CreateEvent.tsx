@@ -93,47 +93,12 @@ export default function CreateEvent() {
   const [date, setDate] = useState('');
   const [time, setTime] = useState('');
   const [location, setLocation] = useState('');
-  const [lat, setLat] = useState('');
-  const [lng, setLng] = useState('');
   const [isPublic, setIsPublic] = useState(true);
   const [tagsInput, setTagsInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isLocating, setIsLocating] = useState(false);
   const user = useAuthStore((state) => state.user);
 
-  const fetchLocation = () => {
-    if (!navigator.geolocation) {
-      alert('Geolocation is not supported by your browser.');
-      return;
-    }
-
-    setIsLocating(true);
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        setLat(position.coords.latitude.toString());
-        setLng(position.coords.longitude.toString());
-        setIsLocating(false);
-      },
-      (error) => {
-        let errorMsg = 'Failed to get location.';
-        switch (error.code) {
-          case error.PERMISSION_DENIED:
-            errorMsg = 'Permission denied. Please allow location access in your browser settings. If you are in a preview window, try opening the app in a new tab.';
-            break;
-          case error.POSITION_UNAVAILABLE:
-            errorMsg = 'Location information is unavailable.';
-            break;
-          case error.TIMEOUT:
-            errorMsg = 'The request to get user location timed out.';
-            break;
-        }
-        console.error('Geolocation Error:', { code: error.code, message: error.message });
-        setIsLocating(false);
-        alert(errorMsg);
-      },
-      { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
-    );
-  };
   const navigate = useNavigate();
 
   const { titleText, descText, phase } = useTypewriterSequence(EXAMPLES);
@@ -163,10 +128,6 @@ export default function CreateEvent() {
           description,
           date: eventDate.toISOString(),
           location,
-          locationCoords: {
-            lat: parseFloat(lat) || 0,
-            lng: parseFloat(lng) || 0,
-          },
           isPublic,
           tags,
           hostId: user?._id,
@@ -245,50 +206,8 @@ export default function CreateEvent() {
           <div className="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-2">
             <div className="sm:col-span-2 flex items-center justify-between">
               <label className="block text-sm font-medium text-stone-700">
-                Coordinates
+                Description
               </label>
-              <button
-                type="button"
-                onClick={fetchLocation}
-                disabled={isLocating}
-                className="inline-flex items-center px-3 py-1.5 border border-stone-200 rounded-lg text-xs font-medium text-stone-600 hover:bg-stone-50 transition-colors disabled:opacity-50"
-              >
-                <Navigation className={`w-3 h-3 mr-1.5 ${isLocating ? 'animate-pulse' : ''}`} />
-                {isLocating ? 'Locating...' : 'Use My Current Location'}
-              </button>
-            </div>
-            <div>
-              <label htmlFor="lat" className="block text-sm font-medium text-stone-700">
-                Latitude
-              </label>
-              <div className="mt-1">
-                <input
-                  type="number"
-                  step="any"
-                  id="lat"
-                  value={lat}
-                  onChange={(e) => setLat(e.target.value)}
-                  className="focus:ring-brand-red focus:border-brand-red block w-full sm:text-sm border-stone-300 rounded-xl py-2 px-3 border transition-colors"
-                  placeholder="e.g. 34.0522"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label htmlFor="lng" className="block text-sm font-medium text-stone-700">
-                Longitude
-              </label>
-              <div className="mt-1">
-                <input
-                  type="number"
-                  step="any"
-                  id="lng"
-                  value={lng}
-                  onChange={(e) => setLng(e.target.value)}
-                  className="focus:ring-brand-red focus:border-brand-red block w-full sm:text-sm border-stone-300 rounded-xl py-2 px-3 border transition-colors"
-                  placeholder="e.g. -118.2437"
-                />
-              </div>
             </div>
           </div>
 
