@@ -196,15 +196,6 @@ export default function Profile() {
             <div className="pt-6 border-t border-stone-100">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-bold text-stone-900">Discovery Settings</h3>
-                <button
-                  type="button"
-                  onClick={fetchLocation}
-                  disabled={isLocating}
-                  className="inline-flex items-center px-3 py-1.5 border border-stone-200 rounded-lg text-xs font-medium text-stone-600 hover:bg-stone-50 transition-colors disabled:opacity-50"
-                >
-                  <Navigation className={`w-3 h-3 mr-1.5 ${isLocating ? 'animate-pulse' : ''}`} />
-                  {isLocating ? 'Locating...' : 'Update from GPS'}
-                </button>
               </div>
               
               <div className="mt-6">

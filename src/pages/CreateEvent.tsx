@@ -79,7 +79,7 @@ function TypewriterPlaceholder({ text, isVisible, isActive, isTextArea = false }
 
   return (
     <div className={`absolute inset-0 pointer-events-none overflow-hidden pl-10 pr-3 ${isTextArea ? 'pt-2.5' : 'flex items-center'}`}>
-      <span className="text-stone-400 sm:text-sm truncate">
+      <span  style={{ color: 'black' }} className="text-stone-400 sm:text-sm truncate">
         {text}
         {isActive && <span className="animate-pulse border-r border-stone-400 ml-0.5"></span>}
       </span>
@@ -172,6 +172,7 @@ export default function CreateEvent() {
                 required
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
+                 style={{ color: 'black' }} 
                 className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-10 sm:text-sm border-stone-300 rounded-xl py-2 px-3 border transition-colors bg-transparent relative z-10"
                 placeholder=""
               />
@@ -226,6 +227,7 @@ export default function CreateEvent() {
                 required
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
+                 style={{ color: 'black' }} 
                 className="focus:ring-brand-red focus:border-brand-red block w-full pl-10 sm:text-sm border-stone-300 rounded-xl py-2 px-3 border transition-colors bg-transparent relative z-10"
                 placeholder=""
               />
@@ -308,12 +310,12 @@ export default function CreateEvent() {
               <label className={`flex-1 flex items-center justify-center p-4 border rounded-xl cursor-pointer transition-colors ${isPublic ? 'border-brand-red bg-brand-red/10 text-brand-red' : 'border-stone-200 bg-white text-stone-500 hover:bg-stone-50'}`}>
                 <input type="radio" name="visibility" className="sr-only" checked={isPublic} onChange={() => setIsPublic(true)} />
                 <Globe className="w-5 h-5 mr-2" />
-                <span className="font-medium text-sm">Public (Friends can see)</span>
+                <span  style={{ color: 'black' }} className="font-medium text-sm">Public (Friends can see)</span>
               </label>
               <label className={`flex-1 flex items-center justify-center p-4 border rounded-xl cursor-pointer transition-colors ${!isPublic ? 'border-brand-red bg-brand-red/10 text-brand-red' : 'border-stone-200 bg-white text-stone-500 hover:bg-stone-50'}`}>
                 <input type="radio" name="visibility" className="sr-only" checked={!isPublic} onChange={() => setIsPublic(false)} />
                 <Lock className="w-5 h-5 mr-2" />
-                <span className="font-medium text-sm">Private (Invite only)</span>
+                <span  style={{ color: 'black' }}  className="font-medium text-sm">Private (Invite only)</span>
               </label>
             </div>
           </div>

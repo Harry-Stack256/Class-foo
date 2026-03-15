@@ -66,10 +66,12 @@ export default function Notifications() {
 
   if (requests.length === 0) {
     return (
-      <div className="p-8 text-center bg-white rounded-2xl border border-stone-200 shadow-sm">
+      <div className="text-stone-700 p-8 text-center bg-white rounded-2xl border border-stone-200 shadow-sm">
         <Bell className="mx-auto h-12 w-12 text-stone-300 mb-2" />
-        <h3 className="text-stone-900 font-medium">No new notifications</h3>
-        <p className="text-stone-500 text-sm mt-1">When someone sends you a friend request, it will appear here.</p>
+        <h3 className="font-medium" style={{ color: 'black' }}>
+          No new notifications
+        </h3>
+        <p style={{ color: 'black' }} className="text-stone-500 text-sm mt-1">When someone sends you a friend request, it will appear here.</p>
       </div>
     );
   }
@@ -83,19 +85,19 @@ export default function Notifications() {
           onClose={() => setToast(null)}
         />
       )}
-      <h2 className="text-xl font-bold text-stone-900 px-1">Friend Requests</h2>
-      <div className="grid gap-4">
+      <h2  style={{ color: 'black' }} className="text-xl font-bold text-stone-900 px-1">Friend Requests</h2>
+      <div  style={{ color: 'black' }} className="grid gap-4">
         {requests.map((request) => (
           <div key={request._id} className="bg-white p-4 rounded-2xl border border-stone-200 shadow-sm flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 font-bold">
+              <div style={{ color: 'black' }} className="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 font-bold">
                 {request.from?.name?.charAt(0).toUpperCase()}
               </div>
               <div>
                 <Link to={`/users/${request.from?._id}`} className="font-bold text-stone-900 hover:text-indigo-600">
                   {request.from?.name}
                 </Link>
-                <p className="text-xs text-stone-500">wants to be your friend</p>
+                <p style={{ color: 'black' }} className="text-xs text-stone-500">wants to be your friend</p>
               </div>
             </div>
             

@@ -76,7 +76,7 @@ export default function FriendsList() {
   return (
     <div className="bg-white shadow-sm rounded-3xl border border-stone-200 overflow-hidden mt-8">
       <div className="p-8">
-        <h2 className="text-2xl font-bold text-stone-900 mb-6">Friends</h2>
+        <h2  style={{ color: 'black' }} className="text-2xl font-bold text-stone-900 mb-6">Friends</h2>
         
         <div className="mb-8">
           <div className="relative">
@@ -109,7 +109,7 @@ export default function FriendsList() {
                           <span className="font-medium text-stone-900">{result.name}</span>
                         </div>
                         {isFriend ? (
-                          <span className="inline-flex items-center text-sm text-emerald-600 font-medium">
+                          <span  style={{ color: 'black' }}  className="inline-flex items-center text-sm text-emerald-600 font-medium">
                             <Check className="w-4 h-4 mr-1" />
                             Friends
                           </span>
@@ -135,11 +135,11 @@ export default function FriendsList() {
         </div>
 
         <div>
-          <h3 className="text-sm font-medium text-stone-500 uppercase tracking-wider mb-4">Your Friends List</h3>
+          <h3  style={{ color: 'black' }} className="text-sm font-medium text-stone-500 uppercase tracking-wider mb-4">Your Friends List</h3>
           {(!user.friends || user.friends.length === 0) ? (
             <div className="text-center py-8 bg-stone-50 rounded-2xl border border-stone-100 border-dashed">
               <UserPlus className="mx-auto h-8 w-8 text-stone-300 mb-2" />
-              <p className="text-sm text-stone-500">You haven't added any friends yet.</p>
+              <p style={{ color: 'black' }} className="text-sm text-stone-500">You haven't added any friends yet.</p>
             </div>
           ) : (
             <ul className="grid gap-4 sm:grid-cols-2">
@@ -149,8 +149,8 @@ export default function FriendsList() {
                     <UserIcon className="h-5 w-5 text-indigo-500" />
                   </div>
                   <div className="min-w-0 flex-1">
-                    <p className="text-sm font-medium text-stone-900 truncate">{friend.name}</p>
-                    <p className="text-xs text-stone-500 truncate">
+                    <p style={{ color: 'black' }} className="text-sm font-medium text-stone-900 truncate">{friend.name}</p>
+                    <p style={{ color: 'black' }} className="text-xs text-stone-500 truncate">
                       {friend.tags?.length ? friend.tags.join(', ') : 'No tags'}
                     </p>
                   </div>
