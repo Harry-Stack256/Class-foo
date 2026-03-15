@@ -137,7 +137,7 @@ export default function Profile() {
           <form onSubmit={handleUpdateProfile} className="space-y-6">
             <div className="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-2">
               <div>
-                <label htmlFor="name" className="block text-sm font-medium text-stone-700">
+                <label htmlFor="name" className="block text-sm font-medium text-white-700">
                   Name
                 </label>
                 <div className="mt-2">
@@ -154,7 +154,7 @@ export default function Profile() {
               </div>
 
               <div>
-                <label htmlFor="age" className="block text-sm font-medium text-stone-700">
+                <label htmlFor="age" className="block text-sm font-medium text-white-700">
                   Age
                 </label>
                 <div className="mt-2">
@@ -173,7 +173,7 @@ export default function Profile() {
             </div>
 
             <div>
-              <label htmlFor="tags" className="block text-sm font-medium text-stone-700 flex items-center">
+              <label htmlFor="tags" className="block text-sm font-medium text-white-700 flex items-center">
                 <Tag className="w-4 h-4 mr-2 text-stone-400" />
                 Preferences & Requirements
               </label>
@@ -208,7 +208,7 @@ export default function Profile() {
               </div>
               
               <div className="mt-6">
-                <label htmlFor="maxDist" className="block text-sm font-medium text-stone-700">
+                <label htmlFor="maxDist" className="block text-sm font-medium text-white-700">
                   Maximum Distance (miles)
                 </label>
                 <div className="mt-2">
@@ -226,7 +226,7 @@ export default function Profile() {
               </div>
 
               <div className="mt-6">
-                <label htmlFor="keywords" className="block text-sm font-medium text-stone-700">
+                <label htmlFor="keywords" className="block text-sm font-medium text-white-700">
                   Filter Keywords (Regex/Keywords)
                 </label>
                 <div className="mt-2">

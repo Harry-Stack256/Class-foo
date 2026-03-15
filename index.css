@@ -68,7 +68,8 @@ a {
 
 /* Specific overrides for elements directly on the brand background */
 .bg-brand-red h1, .bg-brand-red h2, .bg-brand-red h3, .bg-brand-red p, .bg-brand-red span {
-  @apply text-white;
+  @apply text-black;
+  color: black !important; /* Ensure text is visible on the red background */
 }
 
 /* Input focus styles */

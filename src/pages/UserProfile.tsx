@@ -166,11 +166,11 @@ export default function UserProfile() {
                 disabled={isFriendActionLoading || (!!sentRequest && !isFriend)}
                 className={`inline-flex items-center px-4 py-2 border text-sm font-medium rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors disabled:opacity-50 ${
                   isFriend 
-                    ? 'border-stone-200 text-stone-700 bg-white hover:bg-stone-50 focus:ring-stone-500'
+                    ? 'border-stone-200 text-white-700 bg-white hover:bg-stone-50 focus:ring-stone-500'
                     : receivedRequest
                     ? 'border-transparent text-white bg-emerald-600 hover:bg-emerald-700 focus:ring-emerald-500'
                     : sentRequest
-                    ? 'border-stone-200 text-stone-400 bg-stone-50 cursor-not-allowed'
+                    ? 'border-stone-200 text-white-400 bg-stone-50 cursor-not-allowed'
                     : 'border-transparent text-white bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500'
                 }`}
               >

@@ -197,7 +197,7 @@ export default function CreateEvent() {
                 id="location"
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
-                className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-10 sm:text-sm border-stone-300 rounded-xl py-2 px-3 border transition-colors"
+                className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-10 sm:text-sm border-stone-300 rounded-xl py-2 px-3 border transition-colors text-stone-700"
                 placeholder="Central Park, NY or Zoom Link"
               />
             </div>
@@ -254,7 +254,7 @@ export default function CreateEvent() {
                   required
                   value={date}
                   onChange={(e) => setDate(e.target.value)}
-                  className="focus:ring-brand-red focus:border-brand-red block w-full pl-10 sm:text-sm border-stone-300 rounded-xl py-2 px-3 border transition-colors"
+                  className="focus:ring-brand-red focus:border-brand-red block w-full pl-10 text-stone-700 sm:text-sm border-stone-300 rounded-xl py-2 px-3 border transition-colors"
                 />
               </div>
             </div>
@@ -274,7 +274,7 @@ export default function CreateEvent() {
                   required
                   value={time}
                   onChange={(e) => setTime(e.target.value)}
-                  className="focus:ring-brand-red focus:border-brand-red block w-full pl-10 sm:text-sm border-stone-300 rounded-xl py-2 px-3 border transition-colors"
+                  className="focus:ring-brand-red focus:border-brand-red block w-full pl-10 text-stone-700 sm:text-sm border-stone-300 rounded-xl py-2 px-3 border transition-colors"
                 />
               </div>
             </div>
@@ -294,7 +294,7 @@ export default function CreateEvent() {
                 id="tags"
                 value={tagsInput}
                 onChange={(e) => setTagsInput(e.target.value)}
-                className="focus:ring-brand-red focus:border-brand-red block w-full pl-10 sm:text-sm border-stone-300 rounded-xl py-2 px-3 border transition-colors"
+                className="focus:ring-brand-red focus:border-brand-red block w-full pl-10 text-stone-700 sm:text-sm border-stone-300 rounded-xl py-2 px-3 border transition-colors"
                 placeholder="Vegan, Halal, Alcohol-Free (comma separated)"
               />
             </div>
