@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Event</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .page-wrapper {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            color: #fff;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            font-weight: bold;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: white;
+            text-decoration: none;
+            font-size: 14px;
+            transition: opacity 0.3s;
+        }
+
+        .back-link:hover {
+            opacity: 0.8;
+        }
+
+        /* Main Form Card */
+        .form-card {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Event Name Section */
+        .form-section {
+            margin-bottom: 30px;
+        }
+
+        .form-section label {
+            display: block;
+            color: #ff6b9d;
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .form-section input[type="text"],
+        .form-section textarea {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #ffecd2;
+            border-radius: 10px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .form-section input[type="text"]:focus,
+        .form-section textarea:focus {
+            outline: none;
+            border-color: #ff6b9d;
+            box-shadow: 0 0 10px rgba(255, 107, 157, 0.2);
+        }
+
+        .form-section input[type="text"]::placeholder,
+        .form-section textarea::placeholder {
+            color: #ccc;
+        }
+
+        /* Date and Info Section */
+        .date-info-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        /* Calendar Section */
+        .calendar-section {
+            background: linear-gradient(135deg, #fff9f0 0%, #ffe6d5 100%);
+            padding: 25px;
+            border-radius: 15px;
+            border: 2px solid #ffecd2;
+        }
+
+        .calendar-section label {
+            display: block;
+            color: #ff6b9d;
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .month-navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .month-navigation button {
+            background: #ff6b9d;
+            color: white;
+            border: none;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 18px;
+            transition: transform 0.3s;
+        }
+
+        .month-navigation button:hover {
+            transform: scale(1.1);
+        }
+
+        .current-month {
+            font-weight: bold;
+            color: #333;
+            font-size: 16px;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .weekday {
+            text-align: center;
+            font-weight: bold;
+            color: #ff6b9d;
+            font-size: 12px;
+            padding: 8px 0;
+        }
+
+        .calendar-day {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            cursor: pointer;
+            background: white;
+            border: 2px solid transparent;
+            transition: all 0.3s;
+            font-size: 12px;
+            color: #333;
+        }
+
+        .calendar-day:hover {
+            background: #ffe6d5;
+            border-color: #ff6b9d;
+        }
+
+        .calendar-day.selected {
+            background: #ff6b9d;
+            color: white;
+            border-color: #ff6b9d;
+            font-weight: bold;
+        }
+
+        .calendar-day.inactive {
+            color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .selected-date {
+            text-align: center;
+            padding: 10px;
+            background: #ffe6d5;
+            border-radius: 8px;
+            color: #333;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        /* Info/Description Section */
+        .info-section {
+            background: linear-gradient(135deg, #fff9f0 0%, #ffe6d5 100%);
+            padding: 25px;
+            border-radius: 15px;
+            border: 2px solid #ffecd2;
+        }
+
+        .info-section label {
+            display: block;
+            color: #ff6b9d;
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .info-section textarea {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #ffecd2;
+            border-radius: 10px;
+            font-size: 14px;
+            font-family: inherit;
+            min-height: 150px;
+            resize: vertical;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .info-section textarea:focus {
+            outline: none;
+            border-color: #ff6b9d;
+            box-shadow: 0 0 10px rgba(255, 107, 157, 0.2);
+        }
+
+        /* Invite Section */
+        .invite-section {
+            background: linear-gradient(135deg, #fff9f0 0%, #ffe6d5 100%);
+            padding: 30px;
+            border-radius: 15px;
+            border: 2px solid #ffecd2;
+            margin-bottom: 30px;
+        }
+
+        .invite-section h2 {
+            color: #ff6b9d;
+            font-size: 18px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .invite-section h2::before {
+            content: '👥';
+            font-size: 22px;
+        }
+
+        /* Guest Input Box */
+        .guest-input-box {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            border: 2px solid #ffecd2;
+        }
+
+        .guest-input-wrapper {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .guest-input-icon {
+            font-size: 24px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .guest-input-icon:hover {
+            transform: scale(1.2);
+        }
+
+        .guest-input {
+            flex: 1;
+            min-width: 200px;
+            padding: 12px;
+            border: 2px solid #ffecd2;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+
+        .guest-input:focus {
+            outline: none;
+            border-color: #ff6b9d;
+            box-shadow: 0 0 8px rgba(255, 107, 157, 0.2);
+        }
+
+        .add-guest-btn {
+            background: #ff6b9d;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: transform 0.3s;
+        }
+
+        .add-guest-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        /* Guest List */
+        .guest-list {
+            margin-top: 20px;
+        }
+
+        .guest-item {
+            background: white;
+            padding: 12px 16px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            border-left: 4px solid #ff6b9d;
+        }
+
+        .guest-item span {
+            color: #333;
+            font-size: 14px;
+        }
+
+        .remove-guest {
+            background: #ff6b9d;
+            color: white;
+            border: none;
+            padding: 4px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: opacity 0.3s;
+        }
+
+        .remove-guest:hover {
+            opacity: 0.8;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 14px 40px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #ff6b9d 0%, #c06c84 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(255, 107, 157, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(255, 107, 157, 0.4);
+        }
+
+        .btn-secondary {
+            background: #ffecd2;
+            color: #ff6b9d;
+            border: 2px solid #ff6b9d;
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            background: #ffe6d5;
+        }
+
+        @media (max-width: 768px) {
+            .date-info-section {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .form-card {
+                padding: 25px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="page-wrapper">
+        <!-- Header -->
+        <div class="header">
+            <a href="index.html" class="back-link">← Back to Profile</a>
+            <h1>✨ Create Event</h1>
+        </div>
+
+        <!-- Form Card -->
+        <div class="form-card">
+            <!-- Event Name Section -->
+            <div class="form-section">
+                <label for="eventName">Event Name</label>
+                <input type="text" id="eventName" placeholder="Give your event a fun name...">
+            </div>
+
+            <!-- Date and Info Section -->
+            <div class="date-info-section">
+                <!-- Calendar Section -->
+                <div class="calendar-section">
+                    <label>📅 Pick a Date</label>
+
+                    <div class="month-navigation">
+                        <button id="prevMonth">◀</button>
+                        <span class="current-month" id="currentMonth">March 2026</span>
+                        <button id="nextMonth">▶</button>
+                    </div>
+
+                    <div class="calendar-grid" id="calendarGrid">
+                        <!-- Calendar will be generated by JS -->
+                    </div>
+
+                    <div class="selected-date" id="selectedDate">No date selected</div>
+                </div>
+
+                <!-- Info/Description Section -->
+                <div class="info-section">
+                    <label for="eventDescription">📝 Event Info & Description</label>
+                    <textarea id="eventDescription" placeholder="Tell us about your event! What's it about? Any special details?" style="height: 150px;"></textarea>
+                </div>
+            </div>
+
+            <!-- Invite Section -->
+            <div class="invite-section">
+                <h2>Invite Guests</h2>
+
+                <div class="guest-input-box">
+                    <div class="guest-input-wrapper">
+                        <span class="guest-input-icon">💌</span>
+                        <input type="email" id="guestEmail" class="guest-input" placeholder="Enter guest email or name">
+                        <button class="add-guest-btn" onclick="addGuest()">Add</button>
+                    </div>
+                </div>
+
+                <div class="guest-list" id="guestList"></div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <button class="btn btn-secondary" onclick="saveDraft()">Save Draft</button>
+                <button class="btn btn-primary" onclick="createEvent()">Create Event</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedDate = null;
+        let currentMonth = new Date();
+        let guests = [];
+
+        // Initialize calendar
+        function initCalendar() {
+            renderCalendar();
+        }
+
+        function renderCalendar() {
+            const year = currentMonth.getFullYear();
+            const month = currentMonth.getMonth();
+            const firstDay = new Date(year, month, 1);
+            const lastDay = new Date(year, month + 1, 0);
+            const daysInMonth = lastDay.getDate();
+            const startingDayOfWeek = firstDay.getDay();
+
+            const monthNames = [
+                'January', 'February', 'March', 'April', 'May', 'June',
+                'July', 'August', 'September', 'October', 'November', 'December'
+            ];
+            const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+            document.getElementById('currentMonth').textContent =
+                `${monthNames[month]} ${year}`;
+
+            const calendarGrid = document.getElementById('calendarGrid');
+            calendarGrid.innerHTML = '';
+
+            // Add day headers
+            dayNames.forEach(day => {
+                const dayHeader = document.createElement('div');
+                dayHeader.className = 'weekday';
+                dayHeader.textContent = day;
+                calendarGrid.appendChild(dayHeader);
+            });
+
+            // Add empty cells for days before month starts
+            for (let i = 0; i < startingDayOfWeek; i++) {
+                const emptyCell = document.createElement('div');
+                emptyCell.className = 'calendar-day inactive';
+                calendarGrid.appendChild(emptyCell);
+            }
+
+            // Add days of month
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dayCell = document.createElement('div');
+                dayCell.className = 'calendar-day';
+                dayCell.textContent = day;
+
+                const currentDate = new Date(year, month, day);
+                if (selectedDate && selectedDate.toDateString() === currentDate.toDateString()) {
+                    dayCell.classList.add('selected');
+                }
+
+                dayCell.onclick = () => selectDate(new Date(year, month, day));
+                calendarGrid.appendChild(dayCell);
+            }
+        }
+
+        function selectDate(date) {
+            selectedDate = date;
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('selectedDate').textContent =
+                `Selected: ${date.toLocaleDateString('en-US', options)}`;
+            renderCalendar();
+        }
+
+        document.getElementById('prevMonth').onclick = () => {
+            currentMonth.setMonth(currentMonth.getMonth() - 1);
+            renderCalendar();
+        };
+
+        document.getElementById('nextMonth').onclick = () => {
+            currentMonth.setMonth(currentMonth.getMonth() + 1);
+            renderCalendar();
+        };
+
+        // Guest management
+        function addGuest() {
+            const input = document.getElementById('guestEmail');
+            const guestValue = input.value.trim();
+
+            if (!guestValue) {
+                alert('Please enter a guest name or email');
+                return;
+            }
+
+            guests.push(guestValue);
+            input.value = '';
+            renderGuestList();
+        }
+
+        function removeGuest(index) {
+            guests.splice(index, 1);
+            renderGuestList();
+        }
+
+        function renderGuestList() {
+            const guestList = document.getElementById('guestList');
+            guestList.innerHTML = '';
+
+            guests.forEach((guest, index) => {
+                const guestItem = document.createElement('div');
+                guestItem.className = 'guest-item';
+                guestItem.innerHTML = `
+                    <span>👤 ${guest}</span>
+                    <button class="remove-guest" onclick="removeGuest(${index})">Remove</button>
+                `;
+                guestList.appendChild(guestItem);
+            });
+        }
+
+        // Allow Enter key to add guest
+        document.getElementById('guestEmail').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                addGuest();
+            }
+        });
+
+        // Event creation
+        function saveDraft() {
+            const eventData = {
+                name: document.getElementById('eventName').value,
+                description: document.getElementById('eventDescription').value,
+                date: selectedDate ? selectedDate.toDateString() : null,
+                guests: guests
+            };
+            console.log('Draft saved:', eventData);
+            alert('Event draft saved!');
+        }
+
+        function createEvent() {
+            const eventName = document.getElementById('eventName').value;
+            if (!eventName) {
+                alert('Please enter an event name');
+                return;
+            }
+            if (!selectedDate) {
+                alert('Please select a date');
+                return;
+            }
+
+            const eventData = {
+                name: eventName,
+                description: document.getElementById('eventDescription').value,
+                date: selectedDate.toDateString(),
+                guests: guests
+            };
+            console.log('Event created:', eventData);
+            alert('Event created successfully! 🎉');
+        }
+
+        // Initialize
+        initCalendar();
+    </script>
+</body>
+
+</html>

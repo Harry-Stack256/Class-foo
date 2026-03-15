@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+    <style>
+        /* Reusing the same styles for consistency */
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #e9ecef; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .card { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.1); width: 100%; max-width: 350px; }
+        h2 { text-align: center; color: #333; margin-bottom: 25px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; color: #666; font-size: 0.9rem; }
+        input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 1rem; }
+        button { width: 100%; padding: 12px; background-color: #007bff; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 1rem; font-weight: bold; margin-top: 10px; }
+        button:hover { background-color: #0069d9; }
+        .footer-text { text-align: center; margin-top: 20px; font-size: 0.85rem; color: #777; }
+        .footer-text a { color: #28a745; text-decoration: none; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <h2>Sign Up</h2>
+        <form action="/register" method="POST">
+            <div class="form-group">
+                <label for="new-user">Choose Username</label>
+                <input type="text" id="new-user" name="username" required placeholder="New username">
+            </div>
+            <div class="form-group">
+                <label for="new-pass">Create Password</label>
+                <input type="password" id="new-pass" name="password" required placeholder="New password">
+            </div>
+            <button type="submit">Create Account</button>
+        </form>
+        <div class="footer-text">
+            Already have an account? <a href="login.html">Log in here</a>
+        </div>
+    </div>
+
+</body>
+</html>

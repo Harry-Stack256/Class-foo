@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Host Dashboard</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background-color: #f8f9fa; margin: 0; padding: 20px; color: #212529; }
+        .dashboard-container { max-width: 600px; margin: 0 auto; background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+        
+        /* Event Title */
+        .event-title-placeholder { font-size: 1.8rem; font-weight: 800; color: #333; margin-bottom: 25px; border-left: 5px solid #007bff; padding-left: 15px; }
+
+        /* AI Chatbox Section */
+        .ai-section { background: #f0f7ff; border: 1px solid #cce5ff; border-radius: 12px; padding: 15px; margin-bottom: 30px; }
+        .ai-header { font-weight: bold; color: #004085; display: flex; align-items: center; margin-bottom: 10px; font-size: 0.9rem; text-transform: uppercase; }
+        .ai-header span { margin-right: 8px; }
+        .ai-input-area { background: white; border: 1px solid #ddd; border-radius: 8px; padding: 10px; display: flex; align-items: center; }
+        .ai-input-area input { border: none; outline: none; flex: 1; font-size: 0.95rem; }
+        .ai-btn { background: #007bff; color: white; border: none; padding: 5px 12px; border-radius: 6px; cursor: pointer; }
+
+        /* Stats & Guest Logic */
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
+        .stat-box { background: #fdfdfd; border: 1px solid #eee; padding: 15px; border-radius: 12px; text-align: center; }
+        .stat-number { font-size: 1.4rem; font-weight: bold; display: block; }
+        .stat-label { font-size: 0.8rem; color: #777; }
+
+        /* Guest Icons & Expand */
+        .coming-section { margin-top: 20px; }
+        .icon-row { display: flex; gap: -10px; margin: 15px 0; } /* Negative gap for "stacked" look */
+        .guest-avatar { width: 35px; height: 35px; background: #ddd; border-radius: 50%; border: 2px solid white; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
+        .expand-link { display: inline-block; margin-top: 10px; color: #007bff; text-decoration: none; font-weight: 600; font-size: 0.9rem; }
+        .expand-link:hover { text-decoration: underline; }
+
+        /* Restriction Summary */
+        .restriction-summary { margin-top: 25px; padding-top: 20px; border-top: 1px dashed #ccc; }
+        .restriction-count { background: #fff3cd; color: #856404; padding: 10px; border-radius: 8px; display: inline-block; font-weight: bold; width: 100%; box-sizing: border-box; text-align: center; }
+    </style>
+</head>
+<body>
+
+    <div class="dashboard-container">
+        <div class="event-title-placeholder">
+            {{Event_Name_Placeholder}}
+        </div>
+
+        <div class="ai-section">
+            <div class="ai-header"><span>✨</span> AI Overview</div>
+            <div class="ai-input-area">
+                <input type="text" placeholder="Ask AI about guest restrictions...">
+                <button class="ai-btn">Send</button>
+            </div>
+        </div>
+
+        <div class="coming-section">
+            <span class="stat-label">PEOPLE COMING</span>
+            <div class="icon-row">
+                <div class="guest-avatar">👤</div>
+                <div class="guest-avatar">👤</div>
+                <div class="guest-avatar">👤</div>
+                <div class="guest-avatar" style="background:#eee; font-size: 0.7rem; color:#999;">+5</div>
+            </div>
+            <a href="friends.html" class="expand-link">Invite more friends +</a>
+        </div>
+
+        <hr style="border: 0; border-top: 1px solid #eee; margin: 25px 0;">
+
+        <div class="stats-grid">
+            <div class="stat-box">
+                <span class="stat-number" style="color: #ffc107;">{{#_Maybe}}</span>
+                <span class="stat-label">MAYBE</span>
+            </div>
+            <div class="stat-box">
+                <span class="stat-number" style="color: #dc3545;">{{#_No}}</span>
+                <span class="stat-label">NOT COMING</span>
+            </div>
+        </div>
+
+        <div class="restriction-summary">
+            <div class="restriction-count">
+                ⚠️ {{Total_Restrictions_Count}} Dietary Restrictions Detected
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
