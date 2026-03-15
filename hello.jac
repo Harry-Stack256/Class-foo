@@ -1,4 +1,5 @@
 # Simple import
+
 import os;
 import sys, json;
 
@@ -14,15 +15,33 @@ import from math { sqrt, pi, log as logarithm }
 include random;
 
 #This is where the server will live 
- node Todo { has title: str, done: bool = False; } #This would be for are database
+ node Todo { has name: str, tag: str ;} #This would be for are database
+ def greet(name: str) -> str {
+    return f"Hello, {name}!";
+}
 with entry{
-    root ++> Todo(title="Learn Jac");  # Automatically persisted this adds to the root node of our database
+   root ++> Todo(name="Learn Jac", tag="Learn Jac");  # Automatically persisted this adds to the root node of our database
     print("Hello, World!");
+    print(greet("Alice"));
 
 }
-# Use :__main__ to run only when this is the main module
-with entry:__main__ {
-
-    print("Only when run directly");
+cl{
+    with entry {
+        print("Client: Hello from the browser!");
 }
+}
+
+
+##are server code would typically handle database interactions, business logic, and API endpoints, while client code would manage user interface and interactions.
+sv {
+   
+
+    with entry{
+        root ++> Todo(name="Learn Jac", tag="Learn Jac");
+        print("Server: Todo added to database");
+        print(greet("Server"));
+    }
+    
+}
+
 

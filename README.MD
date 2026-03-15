@@ -27,4 +27,13 @@ Code that compiles to native machine code.
 * **Purpose:** High-performance tasks, LLM orchestration, and low-level system control.
 
 --- I know everything up there is true I need to verfiy the bootom is true 
+Main Program Flow 
+definitions
+  node
+  walker
+  functions
+
+execution
+  with entry { ... }
+
 *Note: Jac automatically handles the interop (serialization/routing) between these codespaces, so you don't have to write "glue code" for your frontend and backend to talk.*
